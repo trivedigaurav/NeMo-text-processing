@@ -25,7 +25,6 @@ from nemo_text_processing.inverse_text_normalization.en.taggers.money import Mon
 from nemo_text_processing.inverse_text_normalization.en.taggers.ordinal import OrdinalFst
 from nemo_text_processing.inverse_text_normalization.en.taggers.punctuation import PunctuationFst
 from nemo_text_processing.inverse_text_normalization.en.taggers.telephone import TelephoneFst
-from nemo_text_processing.inverse_text_normalization.en.taggers.time import TimeFst
 from nemo_text_processing.inverse_text_normalization.en.taggers.whitelist import WhiteListFst
 from nemo_text_processing.inverse_text_normalization.en.taggers.word import WordFst
 from nemo_text_processing.text_normalization.en.graph_utils import (
@@ -82,7 +81,6 @@ class ClassifyFst(GraphFst):
             measure_graph = MeasureFst(cardinal=cardinal, decimal=decimal, input_case=input_case).fst
             date_graph = DateFst(ordinal=ordinal, input_case=input_case).fst
             word_graph = WordFst().fst
-            time_graph = TimeFst(input_case=input_case).fst
             money_graph = MoneyFst(cardinal=cardinal, decimal=decimal, input_case=input_case).fst
             whitelist_graph = WhiteListFst(input_file=whitelist, input_case=input_case).fst
             punct_graph = PunctuationFst().fst
@@ -91,7 +89,6 @@ class ClassifyFst(GraphFst):
 
             classify = (
                 pynutil.add_weight(whitelist_graph, 1.01)
-                | pynutil.add_weight(time_graph, 1.1)
                 | pynutil.add_weight(date_graph, 1.09)
                 | pynutil.add_weight(decimal_graph, 1.1)
                 | pynutil.add_weight(measure_graph, 1.1)
