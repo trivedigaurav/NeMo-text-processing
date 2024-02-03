@@ -42,12 +42,20 @@ class CardinalFst(GraphFst):
 
     def __init__(self, input_case: str = INPUT_LOWER_CASED):
         super().__init__(name="cardinal", kind="classify")
+        
         self.input_case = input_case
+        
         graph_zero = pynini.string_file(get_abs_path("data/numbers/zero.tsv"))
         graph_digit = pynini.string_file(get_abs_path("data/numbers/digit.tsv"))
         graph_ties = pynini.string_file(get_abs_path("data/numbers/ties.tsv"))
         graph_teen = pynini.string_file(get_abs_path("data/numbers/teen.tsv"))
-        self.graph_two_digit = graph_teen | ((graph_ties) + delete_space + (graph_digit | pynutil.insert("0")))
+        
+        graph_two_digit = graph_teen | ((graph_ties) + delete_space + (graph_digit | pynutil.insert("0")))
+        self.graph_two_digit = graph_two_digit
+        
+        #one twenty, one twenty one, etc.
+        graph_three_digit = graph_digit + delete_space + graph_two_digit
+       
         graph_hundred = pynini.cross("hundred", "")
 
         graph_hundred_component = pynini.union(graph_digit + delete_space + graph_hundred, pynutil.insert("0"))
@@ -72,7 +80,7 @@ class CardinalFst(GraphFst):
             (graph_ties | pynutil.insert("0")) + delete_space + (graph_digit | pynutil.insert("0")),
         )
 
-        graph_hundreds = graph_hundred_component | graph_hundred_as_thousand
+        graph_hundreds = graph_three_digit | graph_hundred_component | graph_hundred_as_thousand
 
         graph_ties_component = pynini.union(
             graph_teen | pynutil.insert("00"),
