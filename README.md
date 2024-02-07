@@ -1,6 +1,9 @@
 **NeMo Text Processing**
 ==========================
 
+> [!NOTE]
+> This is deployed by [LearningMotors/inverse-text-normalization-nemo](https://github.com/LearningMotors/inverse-text-normalization-nemo)
+
 Introduction
 ------------
 
